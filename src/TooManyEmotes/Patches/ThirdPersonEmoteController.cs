@@ -529,7 +529,7 @@ namespace TooManyEmotes.Patches
 
             if (emoteControllerLocal.IsPerformingCustomEmote())
             {
-                var heldItem = localPlayerController.GetHeldGrabbable();
+                var heldItem = localPlayerController.GetHeldGrabbableSafe();
                 if (heldItem)
                 {
                     heldItem.parentObject = firstPersonEmotesEnabled ? localPlayerController.localItemHolder : localPlayerController.serverItemHolder;
