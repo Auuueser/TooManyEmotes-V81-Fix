@@ -17,5 +17,18 @@ Copyright (c) 2023 cmooref17
 - Hardened `ThirdPersonEmoteController.CallChangeAudioListenerToObject` against missing or delayed `activeAudioListener` initialization.
 - Added fallback handling when the original `ChangeAudioListenerToObject` method is unavailable or fails.
 - Improved reset/stop emote audio listener restoration checks.
+- Added runtime compatibility handling for MoreCompany cosmetic API and model-anchor differences.
 
 These changes are intended to keep TooManyEmotes functional on newer Lethal Company versions while preserving the original MIT license terms.
+
+## Compatibility Notice
+
+This project includes compatibility handling for MoreCompany by notnotnotswipez.
+
+MoreCompany source:
+https://github.com/notnotnotswipez/MoreCompany
+
+MoreCompany license:
+MIT License
+
+No MoreCompany source code, binaries, or assets are redistributed in this package unless otherwise stated.

@@ -52,6 +52,12 @@ Original TooManyEmotes project by cmooref17:
 
 https://github.com/cmooref17/Lethal-Company-TooManyEmotes
 
+MoreCompany compatibility target by notnotnotswipez:
+
+https://github.com/notnotnotswipez/MoreCompany
+
+This repository includes compatibility handling for MoreCompany but does not redistribute MoreCompany source code, binaries, or assets unless otherwise stated.
+
 ## License
 
 This project preserves the original MIT License.
