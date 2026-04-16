@@ -36,6 +36,8 @@ This repository is intended to support an unofficial Thunderstore compatibility 
 
 If the original TooManyEmotes mod is updated to resolve these issues, this compatibility fix may be deprecated depending on the situation.
 
+The Thunderstore package version starts at `0.0.1` because this is an independent compatibility fix package. The original plugin source still reports its upstream `2.3.12` plugin version internally.
+
 ## Credits
 
 Original TooManyEmotes project by cmooref17:
