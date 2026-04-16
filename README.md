@@ -34,6 +34,8 @@ src/TooManyEmotes/Patches/ThirdPersonEmoteController.cs
 
 This repository is intended to support an unofficial Thunderstore compatibility package. If you publish a package from this work, clearly identify it as an unofficial V81 compatibility fix rather than an official TooManyEmotes release.
 
+If the original TooManyEmotes mod is updated to resolve these issues, this compatibility fix may be deprecated depending on the situation.
+
 ## Credits
 
 Original TooManyEmotes project by cmooref17:
