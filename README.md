@@ -15,6 +15,7 @@ This repository contains a repaired source copy of [TooManyEmotes](https://githu
 - Added runtime MoreCompany cosmetic compatibility so `ApplyCosmetic` return-type/signature changes do not interrupt emote playback or preview rendering.
 - Added extra MoreCompany fallback handling for early local-player initialization and alternate cosmetic method signatures.
 - Avoided creating MoreCompany cosmetic components on incompatible preview or emote models, preventing missing cosmetic anchor errors such as `HAT`.
+- Added null-safety around MoreCompany cosmetic lists so partially initialized cosmetics cannot interrupt emote playback.
 
 ## Repository Layout
 
@@ -39,7 +40,7 @@ This repository is intended to support an unofficial Thunderstore compatibility 
 
 If the original TooManyEmotes mod is updated to resolve these issues, this compatibility fix may be deprecated depending on the situation.
 
-The current Thunderstore package version is `0.0.5`. The package version uses the `0.0.x` line because this is an independent compatibility fix package. The original plugin source still reports its upstream `2.3.12` plugin version internally.
+The current Thunderstore package version is `0.0.6`. The package version uses the `0.0.x` line because this is an independent compatibility fix package. The original plugin source still reports its upstream `2.3.12` plugin version internally.
 
 Packaging note: the repaired DLL must be distributed together with the original TooManyEmotes `Assets/` folder. The DLL loads AssetBundles from `Assets/` relative to `TooManyEmotes.dll`, so omitting those files will cause missing AssetBundle errors for emotes, props, audio, and the radial menu.
 

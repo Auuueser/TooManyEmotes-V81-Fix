@@ -34,7 +34,7 @@ namespace TooManyEmotes.Compatibility
             try
             {
                 // If cosmetics not enabled in MoreCompany
-                if (/*!MainClass.cosmeticsSyncOther.Value || */CosmeticRegistry.locallySelectedCosmetics.Count <= 0)
+                if (/*!MainClass.cosmeticsSyncOther.Value || */CosmeticRegistry.locallySelectedCosmetics == null || CosmeticRegistry.locallySelectedCosmetics.Count <= 0)
                     return;
 
                 Transform cosmeticRoot = playerRoot != null ? playerRoot : StartOfRound.Instance?.localPlayerController?.transform;
@@ -43,10 +43,14 @@ namespace TooManyEmotes.Compatibility
 
                 var cosmeticApplication = cosmeticRoot?.GetComponentInChildren<CosmeticApplication>();
 
-                if (cosmeticApplication && cosmeticApplication.spawnedCosmetics.Count != 0)
+                var spawnedCosmetics = cosmeticApplication ? cosmeticApplication.spawnedCosmetics : null;
+                if (spawnedCosmetics != null && spawnedCosmetics.Count != 0)
                 {
-                    foreach (var item in cosmeticApplication.spawnedCosmetics)
+                    foreach (var item in spawnedCosmetics)
                     {
+                        if (!item)
+                            continue;
+
                         SetAllChildrenLayer(item.transform, 0);
                         item.gameObject.SetActive(true);
                     }
@@ -61,8 +65,18 @@ namespace TooManyEmotes.Compatibility
 
                 foreach (var cosmetic in CosmeticRegistry.locallySelectedCosmetics)
                     TryApplyCosmetic(cosmeticApplication, cosmetic);
-                foreach (var cosmetic in cosmeticApplication.spawnedCosmetics)
+
+                spawnedCosmetics = cosmeticApplication.spawnedCosmetics;
+                if (spawnedCosmetics == null)
+                    return;
+
+                foreach (var cosmetic in spawnedCosmetics)
+                {
+                    if (!cosmetic)
+                        continue;
+
                     cosmetic.transform.localScale *= CosmeticRegistry.COSMETIC_PLAYER_SCALE_MULT;
+                }
             }
             catch (Exception e) { LogCompatibilityWarning("Failed to show MoreCompany cosmetics. Continuing without cosmetic sync.", e); }
         }
@@ -79,10 +93,16 @@ namespace TooManyEmotes.Compatibility
 
                 var cosmeticApplication = cosmeticRoot?.GetComponentInChildren<CosmeticApplication>();
 
-                if (cosmeticApplication && cosmeticApplication.spawnedCosmetics.Count != 0)
+                var spawnedCosmetics = cosmeticApplication ? cosmeticApplication.spawnedCosmetics : null;
+                if (spawnedCosmetics != null && spawnedCosmetics.Count != 0)
                 {
-                    foreach (var item in cosmeticApplication.spawnedCosmetics)
+                    foreach (var item in spawnedCosmetics)
+                    {
+                        if (!item)
+                            continue;
+
                         SetAllChildrenLayer(item.transform, 23);
+                    }
                 }
             }
             catch (Exception e) { LogCompatibilityWarning("Failed to hide MoreCompany cosmetics. Continuing without cosmetic sync.", e); }
@@ -96,7 +116,7 @@ namespace TooManyEmotes.Compatibility
             var method = GetApplyCosmeticMethod();
             if (method == null)
             {
-                LogCompatibilityWarning("MoreCompany ApplyCosmetic(string, bool) was not found. Skipping cosmetic sync.");
+                LogCompatibilityWarning("No compatible MoreCompany ApplyCosmetic method was found. Skipping cosmetic sync.");
                 return;
             }
 
