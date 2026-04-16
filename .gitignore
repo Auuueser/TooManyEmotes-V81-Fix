@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.vs/
+tmpbin/
+tmpobj/
+build_tmpbin/
+build_tmpobj/
+*.zip
+*.7z
+*.csproj.user
+*.py
+*.bat
