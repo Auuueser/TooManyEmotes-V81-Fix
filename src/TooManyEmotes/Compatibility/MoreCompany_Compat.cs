@@ -6,6 +6,7 @@ using MoreCompany.Cosmetics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace TooManyEmotes.Compatibility
     internal static class MoreCompany_Compat
     {
         internal static bool Enabled { get { return Chainloader.PluginInfos.ContainsKey("me.swipez.melonloader.morecompany"); } }
+        private static MethodInfo applyCosmeticMethod;
+        private static bool searchedForApplyCosmeticMethod;
+        private static int compatibilityWarningCount;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ShowLocalCosmetics(Transform playerRoot = null)
@@ -48,11 +52,11 @@ namespace TooManyEmotes.Compatibility
                 if (!cosmeticApplication)
                     cosmeticApplication = cosmeticRoot.gameObject.AddComponent<CosmeticApplication>();
                 foreach (var cosmetic in CosmeticRegistry.locallySelectedCosmetics)
-                    cosmeticApplication.ApplyCosmetic(cosmetic, true);
+                    TryApplyCosmetic(cosmeticApplication, cosmetic);
                 foreach (var cosmetic in cosmeticApplication.spawnedCosmetics)
                     cosmetic.transform.localScale *= CosmeticRegistry.COSMETIC_PLAYER_SCALE_MULT;
             }
-            catch { } // Probably fine
+            catch (Exception e) { LogCompatibilityWarning("Failed to show MoreCompany cosmetics. Continuing without cosmetic sync.", e); }
         }
 
 
@@ -70,7 +74,59 @@ namespace TooManyEmotes.Compatibility
                         SetAllChildrenLayer(item.transform, 23);
                 }
             }
-            catch { } // Probably fine
+            catch (Exception e) { LogCompatibilityWarning("Failed to hide MoreCompany cosmetics. Continuing without cosmetic sync.", e); }
+        }
+
+        private static void TryApplyCosmetic(CosmeticApplication cosmeticApplication, string cosmetic)
+        {
+            if (!cosmeticApplication || string.IsNullOrEmpty(cosmetic))
+                return;
+
+            var method = GetApplyCosmeticMethod();
+            if (method == null)
+            {
+                LogCompatibilityWarning("MoreCompany ApplyCosmetic(string, bool) was not found. Skipping cosmetic sync.");
+                return;
+            }
+
+            try
+            {
+                method.Invoke(cosmeticApplication, new object[] { cosmetic, true });
+            }
+            catch (Exception e)
+            {
+                LogCompatibilityWarning("MoreCompany ApplyCosmetic call failed. Skipping cosmetic sync.", e);
+            }
+        }
+
+        private static MethodInfo GetApplyCosmeticMethod()
+        {
+            if (searchedForApplyCosmeticMethod)
+                return applyCosmeticMethod;
+
+            searchedForApplyCosmeticMethod = true;
+            applyCosmeticMethod = typeof(CosmeticApplication).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(m =>
+                {
+                    if (m.Name != "ApplyCosmetic")
+                        return false;
+
+                    var parameters = m.GetParameters();
+                    return parameters.Length == 2 && parameters[0].ParameterType == typeof(string) && parameters[1].ParameterType == typeof(bool);
+                });
+
+            return applyCosmeticMethod;
+        }
+
+        private static void LogCompatibilityWarning(string message, Exception exception = null)
+        {
+            if (compatibilityWarningCount++ >= 3)
+                return;
+
+            if (exception != null)
+                LogWarning(message + " Error: " + exception.GetType().Name + ": " + exception.Message);
+            else
+                LogWarning(message);
         }
 
 
