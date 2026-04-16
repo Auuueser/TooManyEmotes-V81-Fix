@@ -54,7 +54,11 @@ namespace TooManyEmotes.Compatibility
                 }
 
                 if (!cosmeticApplication)
-                    cosmeticApplication = cosmeticRoot.gameObject.AddComponent<CosmeticApplication>();
+                {
+                    LogCompatibilityWarning("MoreCompany CosmeticApplication was not present. Skipping cosmetic sync to avoid unsafe component initialization.");
+                    return;
+                }
+
                 foreach (var cosmetic in CosmeticRegistry.locallySelectedCosmetics)
                     TryApplyCosmetic(cosmeticApplication, cosmetic);
                 foreach (var cosmetic in cosmeticApplication.spawnedCosmetics)
