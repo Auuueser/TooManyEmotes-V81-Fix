@@ -4,6 +4,8 @@ Unofficial compatibility fix for TooManyEmotes on Lethal Company V81.
 
 This repository contains a repaired source copy of [TooManyEmotes](https://github.com/cmooref17/Lethal-Company-TooManyEmotes) by cmooref17. The goal is to keep the mod usable on newer Lethal Company builds where camera and audio listener initialization behavior can differ from the original supported versions.
 
+It also hardens the MoreCompany cosmetic compatibility path so cosmetic API or model-anchor issues do not interrupt emote playback.
+
 ## What Was Fixed
 
 - Fixed `ChangeAudioListenerToObject` compatibility with V81, where the original game method is public instead of only non-public.
